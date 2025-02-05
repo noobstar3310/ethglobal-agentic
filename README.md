@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![image](https://github.com/user-attachments/assets/42a4d4b5-77b3-40e4-91e7-fc771463c91c)# AIquidity
+## What is AIquidity
 
-## Getting Started
+AIquidity is an AI-powered liquidity pool advisor that connects with MetaMask for automated fund management, risk optimization, and time-saving execution. The AI acts as a smart wallet, managing liquidity and executing transactions on behalf of users. 🚀
 
-First, run the development server:
+## Product Description
+### ❓ Problem Statement 
+What’s the problem ⁉️ <br/>
+▫️ ⏳ Time Consuming <br/>
+▫️ 🕹️ Lack of Automation <br/>
+▫️ 🛡 Lack of Risk Optimization 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 🌎 Vision 
+To revolutionize DeFi liquidity management with AI-powered automation, enabling users to maximize returns, minimize risks, and save time through intelligent, hands-free liquidity optimization. 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 📢 Unique Value Proposition 
+AIquidity offers a smart, AI-driven liquidity pool advisor that seamlessly connects with MetaMask, allowing users to automate fund management, optimize risk, and execute transactions effortlessly. By acting as an autonomous wallet, AIquidity eliminates manual complexities, enhances capital efficiency, and maximizes returns, making DeFi liquidity management simpler, smarter, and more profitable. 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
+1. Tools: CDP Agent Kit
+2. Service integration layer: Wagmi.js
+3. Supported chain: Base
+4. Frontend: NEXT.JS, Shadcn UI
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Contract Address 
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
