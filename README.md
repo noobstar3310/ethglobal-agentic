@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/42a4d4b5-77b3-40e4-91e7-fc771463c91c)# AIquidity
+![image-removebg-preview](https://github.com/user-attachments/assets/a11e3f2c-e504-482a-bb35-04c9ed3da40f)
 ## What is AIquidity
 
 AIquidity is an AI-powered liquidity pool advisor that connects with MetaMask for automated fund management, risk optimization, and time-saving execution. The AI acts as a smart wallet, managing liquidity and executing transactions on behalf of users. 🚀
