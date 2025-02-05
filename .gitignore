@@ -1,41 +1,133 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+**/.DS_Store
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+**/.python-version
 
-# testing
-/coverage
+# IDE
+.idea/*
+.vscode/*
 
-# next.js
-/.next/
-/out/
+## Emacs
+*~
+\#*\#
+.\#*
+**/.projectile
 
-# production
-/build
+# Python cache files
+**/__pycache__/
 
-# misc
-.DS_Store
-*.pem
+# Wallet data
+**/wallet_data.txt
 
-# debug
+# Tools
+**/.pytest_cache
+
+**/.ruff_cache
+
+**/.mypy_cache
+
+# Build
+**/_build/
+
+**/build/
+
+**/dist/
+
+# Virtual Environments
+**/venv/
+**/.venv/
+
+# Environment Configurations
+**/env/
+**/.env/
+**/.env
+**/.env.local/
+**/.env.test/
+
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# IDE
+.idea/*
+.vscode/*
 
-# vercel
-.vercel
+## Emacs
+*~
+\#*\#
+.\#*
+**/.projectile
 
-# typescript
+# Build outputs
+dist
+out
+.next
+.nuxt
+build/Release
+.turbo/
+
+# Coverage
+coverage
+**/.coverage
+*.lcov
+.nyc_output
+lib-cov
+
+# Dependencies
+node_modules/
+jspm_packages/
+bower_components
+web_modules/
+.pnp.*
+
+# Cache
+.npm
+.eslintcache
+.stylelintcache
+.parcel-cache
+.cache
+.temp
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# IDE
+.vscode
+.vscode-test
+.idea
+.tern-port
+
+# Environment Configurations
+**/env/
+**/.env/
+**/.env
+**/.env.local/
+**/.env.test/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 *.tsbuildinfo
-next-env.d.ts
+.node_repl_history
+
+# Yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Misc
+.DS_Store
+**/*_local*
+api.json
+
+# TS Docs
+**/typescript/docs/
+docs/
