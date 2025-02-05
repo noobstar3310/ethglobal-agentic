@@ -17,7 +17,7 @@ To revolutionize DeFi liquidity management with AI-powered automation, enabling 
 AIquidity offers a smart, AI-driven liquidity pool advisor that seamlessly connects with MetaMask, allowing users to automate fund management, optimize risk, and execute transactions effortlessly. By acting as an autonomous wallet, AIquidity eliminates manual complexities, enhances capital efficiency, and maximizes returns, making DeFi liquidity management simpler, smarter, and more profitable. 
 
 ## Tech Stack
-1. Tools: CDP Agent Kit
+1. Tools: Coinbase
 2. Service integration layer: Wagmi.js
 3. Supported chain: Base
 4. Frontend: NEXT.JS, Shadcn UI
