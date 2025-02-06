@@ -10,12 +10,48 @@ import {
 } from "@coinbase/agentkit";
 import { getLangChainTools } from "@coinbase/agentkit-langchain";
 import { HumanMessage } from "@langchain/core/messages";
+import { DynamicTool } from "@langchain/core/tools";
 import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as readline from "readline";
+import axios from "axios";
+
+const httpRequestTool = new DynamicTool({
+  name: "http_request",
+  description: "Make a batched GET request to a URL and return summarized data.",
+  func: async (url: string) => {
+    try {
+      const response = await axios.get(url);
+      const data = response.data.data; // DefiLlama API response structure
+
+      if (!Array.isArray(data)) {
+        return "Invalid response format: expected an array.";
+      }
+
+      const batchSize = 10;
+      const results: Array<Array<{name: string; apy: number; tvl: number; risk: string}>> = [];
+
+      for (let i = 0; i < data.length; i += batchSize) {
+        const batch = data.slice(i, i + batchSize);
+        const processedBatch = batch.map(pool => ({
+          name: String(pool.pool),
+          apy: Number(pool.apy),
+          tvl: Number(pool.tvlUsd),
+          risk: String(pool.risk ?? "Unknown"),
+        }));
+        results.push(processedBatch);
+      }
+
+      return JSON.stringify(results);
+    } catch (error) {
+      return `HTTP request failed: ${error instanceof Error ? error.message : 'Unknown error'}`;
+    }
+  },
+});
+
 
 dotenv.config();
 
@@ -111,6 +147,7 @@ async function initializeAgent() {
     });
 
     const tools = await getLangChainTools(agentkit);
+    tools.push(httpRequestTool);
 
     // Store buffered conversation history in memory
     const memory = new MemorySaver();
@@ -122,15 +159,23 @@ async function initializeAgent() {
       tools,
       checkpointSaver: memory,
       messageModifier: 
-        "You are a Liquidity Pool Advisor AI Agent powered by Coinbase Developer Platform AgentKit.\n" +
-        "You can recommend Liquidity Pool based on the requirements from the users.\n" +
-        "You can get the Liquidity Pool data from here https://app.uniswap.org/explore/pools\n" +
-        "You are empowered to interact onchain using your tools.\n" +
-        "If you ever need funds, you can request them from the faucet if you are on network ID 'base-sepolia'. If not, you can provide your wallet details and request funds from the user.\n"+ 
-        "Before executing your first action, get the wallet details to see what network you're on. If there is a 5XX (internal) HTTP error code, ask the user to try again later.\n"+ 
-        "-If someone asks you to do something you can't do with your currently available tools, you must say so, and encourage them to implement it themselves using the CDP SDK + Agentkit, recommend they go to docs.cdp.coinbase.com for more information.\n" +
-        "Be concise and helpful with your responses.\n" + 
-        "Refrain from restating your tools' descriptions unless it is explicitly requested.\n",
+        "You are a Liquidity Pool Advisor AI Agent powered by Coinbase Developer Platform AgentKit.\n\n" +
+        "Your primary functions:\n" +
+        "1. Recommend Liquidity Pools based on user requirements\n" +
+        "2. Fetch real-time data from https://yields.llama.fi/pools using the http_request tool\n" +
+        "3. When fetching data:\n" +
+        "   - Make batch requests to avoid rate limits\n" +
+        "   - Only fetch data for pools you've specifically recommended\n" +
+        "   - Include key metrics like APY, TVL, and risks\n\n" +
+        "Protocol:\n" +
+        "- Before any blockchain interaction, check wallet details and network\n" +
+        "- For base-sepolia network, use faucet for funds; otherwise, request from user\n" +
+        "- If encountering 5XX errors, advise user to retry later\n" +
+        "- For unsupported operations, direct users to docs.cdp.coinbase.com\n\n" +
+        "Communication style:\n" +
+        "- Be concise and precise\n" +
+        "- Focus on actionable insights\n" +
+        "- Only describe tools when explicitly asked\n",
     });
 
     // Save wallet data

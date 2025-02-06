@@ -23,6 +23,9 @@ dependencies:
   '@langchain/openai':
     specifier: ^0.3.14
     version: 0.3.17(@langchain/core@0.3.37)(ws@8.18.0)
+  axios:
+    specifier: ^1.7.9
+    version: 1.7.9
   dotenv:
     specifier: ^16.4.5
     version: 16.4.7
