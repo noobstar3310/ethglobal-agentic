@@ -32,16 +32,20 @@ const httpRequestTool = new DynamicTool({
       }
 
       const batchSize = 10;
-      const results: Array<Array<{name: string; apy: number; tvl: number;}>> = [];
+      const maxResults = 50; // Limit to first 50 results
+      const results: Array<Array<{ name: string; apy: number }>> = [];
 
-      for (let i = 0; i < data.length; i += batchSize) {
+      for (let i = 0; i < Math.min(data.length, maxResults); i += batchSize) {
         const batch = data.slice(i, i + batchSize);
         const processedBatch = batch.map(pool => ({
           name: String(pool.symbol),
           apy: Number(pool.apy),
-          tvl: Number(pool.tvlUsd),
         }));
         results.push(processedBatch);
+
+        if (results.length * batchSize >= maxResults) {
+          break; // Stop processing after 50 results
+        }
       }
 
       return JSON.stringify(results);
@@ -50,6 +54,7 @@ const httpRequestTool = new DynamicTool({
     }
   },
 });
+
 
 
 dotenv.config();
@@ -165,7 +170,7 @@ async function initializeAgent() {
         "3. When fetching data:\n" +
         "   - Make batch requests to avoid rate limits\n" +
         "   - Only fetch data for pools you've specifically recommended\n" +
-        "   - Include key metrics like APY, TVL, and risks\n\n" +
+        "   - Include key metrics like APY\n\n" +
         "Protocol:\n" +
         "- Before any blockchain interaction, check wallet details and network\n" +
         "- For base-sepolia network, use faucet for funds; otherwise, request from user\n" +
