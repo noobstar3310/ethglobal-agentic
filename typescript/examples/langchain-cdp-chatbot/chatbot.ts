@@ -32,15 +32,14 @@ const httpRequestTool = new DynamicTool({
       }
 
       const batchSize = 10;
-      const results: Array<Array<{name: string; apy: number; tvl: number; risk: string}>> = [];
+      const results: Array<Array<{name: string; apy: number; tvl: number;}>> = [];
 
       for (let i = 0; i < data.length; i += batchSize) {
         const batch = data.slice(i, i + batchSize);
         const processedBatch = batch.map(pool => ({
-          name: String(pool.pool),
+          name: String(pool.symbol),
           apy: Number(pool.apy),
           tvl: Number(pool.tvlUsd),
-          risk: String(pool.risk ?? "Unknown"),
         }));
         results.push(processedBatch);
       }
