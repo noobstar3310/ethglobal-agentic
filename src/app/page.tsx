@@ -21,6 +21,7 @@ import { WagmiProvider } from "wagmi";
 import { sepolia } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { AuroraBackground } from "@/components/ui/aurora-background";
+import QuickResponse from "@/components/ui/quick-response";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
@@ -39,6 +40,10 @@ export default function Web3AIChat() {
     setIsWalletConnected(true);
   };
 
+  const handleQuickSelect = (message: string) => {
+    handleInputChange({ target: { value: message } } as React.ChangeEvent<HTMLInputElement>);
+  };
+  
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
@@ -101,8 +106,15 @@ export default function Web3AIChat() {
                         </div>
                       ))}
                     </ScrollArea>
-                  </CardContent>
+                    
+                    <div className="overflow-x-auto whitespace-nowrap mt-4 px-2 space-x-2 flex scrollbar-hide">
+                      
+                      <QuickResponse onQuickSelect={handleQuickSelect} />
+                    </div>
+
+                    </CardContent>
                   <CardFooter>
+                    {/* 🔹 Input Field */}
                     <form onSubmit={handleSubmit} className="flex w-full space-x-2">
                       <Input
                         value={input}
