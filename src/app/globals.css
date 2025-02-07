@@ -60,6 +60,12 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+  .aurora-bg {
+    background: radial-gradient(circle, var(--primary) 0%, var(--accent) 100%);
+    background-size: 200% 200%;
+    animation: aurora 60s linear infinite;
+  }
+  
 }
 
 @layer base {
