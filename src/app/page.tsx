@@ -49,10 +49,11 @@ export default function Web3AIChat() {
             <div className="items-start justify-center min-h-screen w-full mx-14 mt-14 relative z-10">
               <div className="flex space-x-14 justify-center items-center">
                 <div className="flex-col items-center space-y-6">
-                  <div className="relative bg-clip-text text-transparent bg-no-repeat bg-gradient-to-r from-purple-500 via-violet-500 to-pink-500 py-4">
-                    <span className="font-bold text-8xl font-sans">AIquidity</span>
+                  <div className="relative">
+                    <span className="font-bold text-8xl font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                      AIquidity
+                    </span>
                   </div>
-                  {/* Additional Sentence Below AIquidity */}
                   <p className="text-black text-2xl font-semibold">
                     To revolutionize DeFi liquidity management with AI-powered automation, enabling users to maximize returns, minimize risks, and save time through intelligent, hands free liquidity optimization.
                   </p>
