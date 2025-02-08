@@ -14,7 +14,7 @@ What’s the problem ⁉️ <br/>
 To revolutionize DeFi liquidity management with AI-powered automation, enabling users to maximize returns, minimize risks, and save time through intelligent, hands-free liquidity optimization. 
 
 ### 📢 Unique Value Proposition 
-AIquidity offers a smart, AI-driven liquidity pool advisor that seamlessly connects with MetaMask, allowing users to automate fund management, optimize risk, and execute transactions effortlessly. By acting as an autonomous wallet, AIquidity eliminates manual complexities, enhances capital efficiency, and maximizes returns, making DeFi liquidity management simpler, smarter, and more profitable. 
+AIquidity offers a smart, AI-driven liquidity pool advisor that seamlessly connects with CDP AgentKit, allowing users to automate fund management, optimize risk, and execute transactions effortlessly. By acting as an autonomous wallet, AIquidity eliminates manual complexities, enhances capital efficiency, and maximizes returns, making DeFi liquidity management simpler, smarter, and more profitable. 
 
 ## Tech Stack
 1. Tools: CDP Agentkit
