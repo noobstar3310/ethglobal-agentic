@@ -50,35 +50,35 @@ export default function Web3AIChat() {
   const testimonials = [
     {
       quote:
-        "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
+        "Oversee project timelines, coordinate team efforts, ensure milestone completion and facilitate communication for successful AI liquidity pool development.",
       name: "Tan Aik Wei",
       designation: "Project Manager",
       src: "/aikwei.jpeg",
     },
     {
       quote:
-        "Implementation was seamless and the results exceeded our expectations. The platform's flexibility is remarkable.",
+        "Develop an AI chatbot to assist users, provide insights on liquidity pools, process queries, and integrate with the platform for real-time support.",
       name: "Jun Heng",
       designation: "AI Engineer",
       src: "/junheng.jpeg",
     },
     {
       quote:
-        "This solution has significantly improved our team's productivity. The intuitive interface makes complex tasks simple.",
+        "Focuses on market research and pitch deck preparation, identifying target users, analyzing competitors, and crafting a compelling pitch to attract judges and investors.",
       name: "Cassie",
       designation: "Business Development",
       src: "/cassie.jpeg",    
     },
     {
       quote:
-        "Outstanding support and robust features. It's rare to find a product that delivers on all its promises.",
+        "Develop and deploy smart contracts, integrate with CDP AgentKit, and ensure seamless AI-driven liquidity pool management on the blockchain.",
       name: "Celine",
       designation: "Smart Contract Developer",
       src: "/celine.jpeg",
     },
     {
       quote:
-        "The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.",
+        "Design and develop an intuitive UI, display AI-driven insights, and ensure seamless interaction with smart contracts for liquidity management.",
       name: "Lee Xin Rou",
       designation: "Frontend Developer",
       src: "/xinrou.jpeg",    
