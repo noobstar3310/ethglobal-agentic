@@ -22,10 +22,12 @@
     "@tabler/icons-react": "^3.30.0",
     "@tanstack/react-query": "^5.66.0",
     "ai": "^4.1.17",
+    "ai-ui-test": "file:",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
+    "ethers": "^6.13.5",
     "lucide-react": "^0.474.0",
     "motion": "^12.4.1",
     "next": "15.1.6",
@@ -50,5 +52,6 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321"
 }
