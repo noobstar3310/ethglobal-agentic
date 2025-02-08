@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
-import { useChat } from "ai/react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,23 +27,77 @@ import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
-  projectId: "14ff0bb587a0b38929bfd4c86b557327", // Replace with your WalletConnect project ID
+  projectId: "14ff0bb587a0b38929bfd4c86b557327",
   chains: [sepolia],
   ssr: false,
 });
 const queryClient = new QueryClient();
 
 export default function Web3AIChat() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const [messages, setMessages] = useState<Array<{ id: string; role: string; content: string }>>([]);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleConnectWallet = () => {
-    // Placeholder for wallet connection logic
-    setIsWalletConnected(true);
+  const handleSubmitForm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim() || isLoading) return;
+
+    // Add user message immediately
+    const userMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: message
+    };
+    setMessages(prev => [...prev, userMessage]);
+
+    setIsLoading(true);
+    try {
+      console.log("Sending message:", message);
+      const response = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message }),
+      });
+
+      const data = await response.json();
+      console.log("Received response:", data);
+
+      if (Array.isArray(data.responses)) {
+        // Add bot responses
+        const botResponses = data.responses.map((content: string, i: number) => ({
+          id: `response-${Date.now()}-${i}`,
+          role: 'assistant',
+          content
+        }));
+        setMessages(prev => [...prev, ...botResponses]);
+      } else if (data.error) {
+        // Add error message to chat
+        const errorMessage = {
+          id: `error-${Date.now()}`,
+          role: 'assistant',
+          content: `Error: ${data.error}`
+        };
+        setMessages(prev => [...prev, errorMessage]);
+        console.error('Error:', data.error);
+      }
+    } catch (error) {
+      // Add error message to chat
+      const errorMessage = {
+        id: `error-${Date.now()}`,
+        role: 'assistant',
+        content: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+      setMessage('');
+    }
   };
 
-  const handleQuickSelect = (message: string) => {
-    handleInputChange({ target: { value: message } } as React.ChangeEvent<HTMLInputElement>);
+  const handleQuickSelect = (selectedMessage: string) => {
+    setMessage(selectedMessage);
   };
 
   const testimonials = [
@@ -132,7 +185,7 @@ export default function Web3AIChat() {
                     <WalletButton />
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col">
-                    <ScrollArea className="flex-1 w-full pr-4">
+                    <ScrollArea className="flex-1 w-full pr-4 h-[calc(80vh-180px)]">
                       {messages.map((m) => (
                         <div
                           key={m.id}
@@ -168,19 +221,18 @@ export default function Web3AIChat() {
                     </div>
                   </CardContent>
                   <CardFooter className="shrink-0">
-                    {/* 🔹 Input Field */}
-                    <form onSubmit={handleSubmit} className="flex w-full space-x-2">
+                    <form onSubmit={handleSubmitForm} className="flex w-full space-x-2">
                       <Input
-                        value={input}
-                        onChange={handleInputChange}
-                        placeholder="Ask me anything..."
-                        className="flex-grow" />
-                      {/* <Button type="submit"> */}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        placeholder="Ask about liquidity pools..."
+                        className="flex-grow"
+                        disabled={isLoading}
+                      />
                       <HoverBorderGradient as="button" className="flex items-center gap-2 px-4 py-2 text-white font-semibold">
                         <Send className="h-4 w-4" />
                         Send
                       </HoverBorderGradient>
-                      {/* </Button> */}
                     </form>
                   </CardFooter>
                 </Card>
