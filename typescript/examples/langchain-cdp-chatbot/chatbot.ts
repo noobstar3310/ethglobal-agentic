@@ -32,12 +32,13 @@ const httpRequestTool = new DynamicTool({
       }
 
       const batchSize = 10;
-      const maxResults = 50; // Limit to first 50 results
-      const results: Array<Array<{ name: string; apy: number }>> = [];
+      const maxResults = 1000; // Limit to first 50 results
+      const results: Array<Array<{ chain:string; name: string; apy: number }>> = [];
 
       for (let i = 0; i < Math.min(data.length, maxResults); i += batchSize) {
         const batch = data.slice(i, i + batchSize);
         const processedBatch = batch.map(pool => ({
+          chain: String(pool.chain),
           name: String(pool.symbol),
           apy: Number(pool.apy),
         }));
