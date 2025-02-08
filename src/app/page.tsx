@@ -74,8 +74,8 @@ export default function Web3AIChat() {
                     <span>Learn More</span>
                   </HoverBorderGradient>
                 </div>
-                <Card className="w-full max-w-2xl shadow-xl">
-                  <CardHeader className="flex flex-row items-center justify-between">
+                <Card className="w-full max-w-2xl shadow-xl h-[80vh] flex flex-col">
+                  <CardHeader className="flex flex-row items-center justify-between shrink-0">
                     <div className="flex items-center gap-3">
                       <Image
                         src="/AIquidity.png"
@@ -86,8 +86,8 @@ export default function Web3AIChat() {
                     </div>
                     <WalletButton />
                   </CardHeader>
-                  <CardContent>
-                    <ScrollArea className="h-[50vh] w-full pr-4">
+                  <CardContent className="flex-1 flex flex-col">
+                    <ScrollArea className="flex-1 w-full pr-4">
                       {messages.map((m) => (
                         <div
                           key={m.id}
@@ -118,13 +118,11 @@ export default function Web3AIChat() {
                       ))}
                     </ScrollArea>
                     
-                    <div className="overflow-x-auto whitespace-nowrap mt-4 px-2 space-x-2 flex scrollbar-hide">
-                      
+                    <div className="mt-4 px-2 space-x-2 flex overflow-x-auto whitespace-nowrap scrollbar-hide">
                       <QuickResponse onQuickSelect={handleQuickSelect} />
                     </div>
-
-                    </CardContent>
-                  <CardFooter>
+                  </CardContent>
+                  <CardFooter className="shrink-0">
                     {/* 🔹 Input Field */}
                     <form onSubmit={handleSubmit} className="flex w-full space-x-2">
                       <Input

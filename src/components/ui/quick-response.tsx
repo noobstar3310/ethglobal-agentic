@@ -10,6 +10,7 @@ export default function QuickResponse({ onQuickSelect }: QuickResponseProps) {
     "What is AIquidity?",
     "How does liquidity optimization work?",
     "What are the benefits of AI-powered DeFi?",
+    "How to execute a trade?",
   ];
 
   return (
