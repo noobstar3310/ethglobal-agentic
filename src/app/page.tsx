@@ -24,6 +24,7 @@ import { AuroraBackground } from "@/components/ui/aurora-background";
 import QuickResponse from "@/components/ui/quick-response";
 import React from "react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
@@ -45,7 +46,45 @@ export default function Web3AIChat() {
   const handleQuickSelect = (message: string) => {
     handleInputChange({ target: { value: message } } as React.ChangeEvent<HTMLInputElement>);
   };
-  
+
+  const testimonials = [
+    {
+      quote:
+        "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
+      name: "Tan Aik Wei",
+      designation: "Project Manager",
+      src: "/aikwei.jpeg",
+    },
+    {
+      quote:
+        "Implementation was seamless and the results exceeded our expectations. The platform's flexibility is remarkable.",
+      name: "Jun Heng",
+      designation: "AI Engineer",
+      src: "/junheng.jpeg",
+    },
+    {
+      quote:
+        "This solution has significantly improved our team's productivity. The intuitive interface makes complex tasks simple.",
+      name: "Cassie",
+      designation: "Business Development",
+      src: "/cassie.jpeg",    
+    },
+    {
+      quote:
+        "Outstanding support and robust features. It's rare to find a product that delivers on all its promises.",
+      name: "Celine",
+      designation: "Smart Contract Developer",
+      src: "/celine.jpeg",
+    },
+    {
+      quote:
+        "The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.",
+      name: "Lee Xin Rou",
+      designation: "Frontend Developer",
+      src: "/xinrou.jpeg",    
+    },
+  ];
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
@@ -55,24 +94,30 @@ export default function Web3AIChat() {
             <AuroraBackground className="absolute inset-0 w-full h-full z-[-1]" children={undefined} />
             <div className="items-start justify-center min-h-screen w-full mx-14 mt-14 relative z-10">
               <div className="flex space-x-14 justify-center items-center">
-                <div className="flex-col items-center space-y-6">
+                <div className="flex-col items-center space-y-7">
                   <div className="relative">
-                    <span className="font-bold text-8xl font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                    <span className="font-bold text-7xl font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                       AIquidity
                     </span>
                   </div>
-                  <p className="text-black text-2xl font-semibold">
+                  <p className="text-zinc-700 text-1xl font-semibold">
                     To revolutionize DeFi liquidity management with AI-powered automation, enabling users to maximize returns, minimize risks, and save time through intelligent, hands free liquidity optimization.
                   </p>
-                
                   <HoverBorderGradient
                     containerClassName="rounded-full"
-                    as="button"
+                    as="text"
                     className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
                   >
-                    <AceternityLogo />
-                    <span>Learn More</span>
+                    <Image
+                        src="/AIquidity.png"
+                        alt="AIquidity Logo" 
+                        width={20}
+                        height={20}
+                        className="object-contain" />
+                    <span>AI-Powered DeFi Automation</span>
                   </HoverBorderGradient>
+                  <AnimatedTestimonials testimonials={testimonials} />
+                  
                 </div>
                 <Card className="w-full max-w-2xl shadow-xl h-[80vh] flex flex-col">
                   <CardHeader className="flex flex-row items-center justify-between shrink-0">
@@ -130,10 +175,12 @@ export default function Web3AIChat() {
                         onChange={handleInputChange}
                         placeholder="Ask me anything..."
                         className="flex-grow" />
-                      <Button type="submit">
-                        <Send className="h-4 w-4 mr-2" />
+                      {/* <Button type="submit"> */}
+                      <HoverBorderGradient as="button" className="flex items-center gap-2 px-4 py-2 text-white font-semibold">
+                        <Send className="h-4 w-4" />
                         Send
-                      </Button>
+                      </HoverBorderGradient>
+                      {/* </Button> */}
                     </form>
                   </CardFooter>
                 </Card>
@@ -144,26 +191,6 @@ export default function Web3AIChat() {
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
+    
   );
 }
-
-const AceternityLogo = () => {
-  return (
-    <svg
-      width="66"
-      height="65"
-      viewBox="0 0 66 65"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-3 w-3 text-black dark:text-white"
-    >
-      <path
-        d="M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696"
-        stroke="currentColor"
-        strokeWidth="15"
-        strokeMiterlimit="3.86874"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-};
