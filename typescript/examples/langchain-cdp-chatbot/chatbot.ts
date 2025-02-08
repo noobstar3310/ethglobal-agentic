@@ -18,6 +18,45 @@ import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as readline from "readline";
 import axios from "axios";
+import { ethers } from "ethers";
+import { abi } from "./abi";
+
+
+
+dotenv.config();
+
+/**
+ * Validates that required environment variables are set
+ *
+ * @throws {Error} - If required environment variables are missing
+ * @returns {void}
+ */
+if (!process.env.RPC_URL) {
+  throw new Error("RPC_URL is not defined in environment variables");
+}
+const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+
+
+if (!process.env.PRIVATE_KEY) {
+  throw new Error("PRIVATE_KEY is not defined in environment variables");
+}
+const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+
+if (!process.env.CONTRACT_ADDRESS) {
+  throw new Error("CONTRACT_ADDRESS is not defined in environment variables");
+}
+const contract = new ethers.Contract(process.env.CONTRACT_ADDRESS, abi, signer);
+
+async function provideLiquidity() {
+  try {
+    const tx = await contract.provideLiquidity();
+    await tx.wait();
+    return `Add Liquidity successful! Tx: ${tx.hash}`;
+  } catch (error) {
+    console.error("Error:", error);
+    return "Transaction failed.";
+  }
+}
 
 const httpRequestTool = new DynamicTool({
   name: "http_request",
@@ -56,21 +95,29 @@ const httpRequestTool = new DynamicTool({
   },
 });
 
+const provideLiquidityTool = new DynamicTool({
+  name: "provide_liquidity",
+  description: "Provide liquidity to the smart contract. Returns transaction hash on success.",
+  func: async () => {
+    try {
+      return await provideLiquidity();
+    } catch (error) {
+      return `Failed to provide liquidity: ${error instanceof Error ? error.message : 'Unknown error'}`;
+    }
+  },
+});
 
-
-dotenv.config();
-
-/**
- * Validates that required environment variables are set
- *
- * @throws {Error} - If required environment variables are missing
- * @returns {void}
- */
 function validateEnvironment(): void {
   const missingVars: string[] = [];
 
   // Check required variables
-  const requiredVars = ["OPENAI_API_KEY", "CDP_API_KEY_NAME", "CDP_API_KEY_PRIVATE_KEY"];
+  const requiredVars = [
+    "OPENAI_API_KEY", 
+    "CDP_API_KEY_NAME", 
+    "CDP_API_KEY_PRIVATE_KEY",
+    "PRIVATE_KEY",
+    "CONTRACT_ADDRESS"
+  ];
   requiredVars.forEach(varName => {
     if (!process.env[varName]) {
       missingVars.push(varName);
@@ -127,7 +174,8 @@ async function initializeAgent() {
       apiKeyName: process.env.CDP_API_KEY_NAME,
       apiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(/\\n/g, "\n"),
       cdpWalletData: walletDataStr || undefined,
-      networkId: process.env.NETWORK_ID || "base-sepolia",
+      networkId: process.env.NETWORK_ID,
+      rpcUrl: process.env.RPC_URL
     };
 
     const walletProvider = await CdpWalletProvider.configureWithWallet(config);
@@ -153,6 +201,7 @@ async function initializeAgent() {
 
     const tools = await getLangChainTools(agentkit);
     tools.push(httpRequestTool);
+    tools.push(provideLiquidityTool);
 
     // Store buffered conversation history in memory
     const memory = new MemorySaver();
@@ -168,12 +217,13 @@ async function initializeAgent() {
         "Your primary functions:\n" +
         "1. Recommend Liquidity Pools based on user requirements\n" +
         "2. Fetch real-time data from https://yields.llama.fi/pools using the http_request tool\n" +
-        "3. When fetching data:\n" +
+        "3. Execute liquidity provision transactions using the provide_liquidity tool\n" +
+        "4. When fetching data:\n" +
         "   - Make batch requests to avoid rate limits\n" +
         "   - Only fetch data for pools you've specifically recommended\n" +
         "   - Include key metrics like APY\n\n" +
         "Protocol:\n" +
-        "- Before any blockchain interaction, check wallet details and network\n" +
+        "- When a user wants to provide liquidity, immediately use the provide_liquidity tool without asking for confirmation\n" +
         "- For base-sepolia network, use faucet for funds; otherwise, request from user\n" +
         "- If encountering 5XX errors, advise user to retry later\n" +
         "- For unsupported operations, direct users to docs.cdp.coinbase.com\n\n" +
