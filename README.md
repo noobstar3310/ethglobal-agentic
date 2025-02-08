@@ -18,9 +18,7 @@ AIquidity offers a smart, AI-driven liquidity pool advisor that seamlessly conne
 
 ## Tech Stack
 1. Tools: CDP Agentkit
-2. Service integration layer: Wagmi.js
-3. Supported chain: Base
+2. Service integration layer: Wagmi, Ethers.js
+3. Supported chain: Base, Arbitrium
 4. Frontend: NEXT.JS, Shadcn UI
-
-## Contract Address 
 
