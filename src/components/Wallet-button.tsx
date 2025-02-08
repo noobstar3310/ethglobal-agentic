@@ -18,4 +18,4 @@ const WalletButton = () => {
   );
 };
 
-export default WalletButton; 
+export default WalletButton;
