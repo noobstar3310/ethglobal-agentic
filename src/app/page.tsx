@@ -22,6 +22,8 @@ import { sepolia } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import QuickResponse from "@/components/ui/quick-response";
+import React from "react";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
@@ -62,6 +64,15 @@ export default function Web3AIChat() {
                   <p className="text-black text-2xl font-semibold">
                     To revolutionize DeFi liquidity management with AI-powered automation, enabling users to maximize returns, minimize risks, and save time through intelligent, hands free liquidity optimization.
                   </p>
+                
+                  <HoverBorderGradient
+                    containerClassName="rounded-full"
+                    as="button"
+                    className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+                  >
+                    <AceternityLogo />
+                    <span>Learn More</span>
+                  </HoverBorderGradient>
                 </div>
                 <Card className="w-full max-w-2xl shadow-xl">
                   <CardHeader className="flex flex-row items-center justify-between">
@@ -137,3 +148,24 @@ export default function Web3AIChat() {
     </WagmiProvider>
   );
 }
+
+const AceternityLogo = () => {
+  return (
+    <svg
+      width="66"
+      height="65"
+      viewBox="0 0 66 65"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-3 w-3 text-black dark:text-white"
+    >
+      <path
+        d="M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696"
+        stroke="currentColor"
+        strokeWidth="15"
+        strokeMiterlimit="3.86874"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};
