@@ -8,15 +8,13 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  // CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Send } from "lucide-react";
-import { WalletButton } from "@/components/Wallet-button";
+import dynamic from 'next/dynamic';
 import "@rainbow-me/rainbowkit/styles.css";
-import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { WagmiProvider } from "wagmi";
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { sepolia } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { AuroraBackground } from "@/components/ui/aurora-background";
@@ -24,6 +22,8 @@ import QuickResponse from "@/components/ui/quick-response";
 import React from "react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from "remark-gfm";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
@@ -33,16 +33,24 @@ const config = getDefaultConfig({
 });
 const queryClient = new QueryClient();
 
+const WalletButton = dynamic(() => import("@/components/Wallet-button"), { ssr: false });
+const RainbowKitProvider = dynamic(() => import('@rainbow-me/rainbowkit').then((mod) => mod.RainbowKitProvider), { ssr: false });
+const WagmiProvider = dynamic(() => import('wagmi').then((mod) => mod.WagmiProvider), { ssr: false });
+
 export default function Web3AIChat() {
   const [messages, setMessages] = useState<Array<{ id: string; role: string; content: string }>>([]);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  // const scrollToBottom = () => {
+  //   setTimeout(() => {
+  //     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  //   }, 100); // Adding a slight delay ensures the new message is fully rendered before scrolling
+  // };
 
   useEffect(() => {
-    scrollToBottom();
+    setIsMounted(true);
+    // scrollToBottom();
   }, [messages]);
 
   const [isWalletConnected, setIsWalletConnected] = useState(false);
@@ -53,7 +61,6 @@ export default function Web3AIChat() {
     e.preventDefault();
     if (!message.trim() || isLoading) return;
 
-    // Add user message immediately
     const userMessage = {
       id: Date.now().toString(),
       role: 'user',
@@ -63,7 +70,6 @@ export default function Web3AIChat() {
 
     setIsLoading(true);
     try {
-      console.log("Sending message:", message);
       const response = await fetch('/api/chatbot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -71,10 +77,8 @@ export default function Web3AIChat() {
       });
 
       const data = await response.json();
-      console.log("Received response:", data);
 
       if (Array.isArray(data.responses)) {
-        // Add bot responses
         const botResponses = data.responses.map((content: string, i: number) => ({
           id: `response-${Date.now()}-${i}`,
           role: 'assistant',
@@ -82,24 +86,20 @@ export default function Web3AIChat() {
         }));
         setMessages(prev => [...prev, ...botResponses]);
       } else if (data.error) {
-        // Add error message to chat
         const errorMessage = {
           id: `error-${Date.now()}`,
           role: 'assistant',
           content: `Error: ${data.error}`
         };
         setMessages(prev => [...prev, errorMessage]);
-        console.error('Error:', data.error);
       }
     } catch (error) {
-      // Add error message to chat
       const errorMessage = {
         id: `error-${Date.now()}`,
         role: 'assistant',
-        content: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
+        content: `Error: Something went wrong. Please try again.`
       };
       setMessages(prev => [...prev, errorMessage]);
-      console.error('Error:', error);
     } finally {
       setIsLoading(false);
       setMessage('');
@@ -113,49 +113,53 @@ export default function Web3AIChat() {
   const testimonials = [
     {
       quote:
-        "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
+        "Oversee project timelines, coordinate team efforts, ensure milestone completion and facilitate communication for successful AI liquidity pool development.",
       name: "Tan Aik Wei",
       designation: "Project Manager",
       src: "/aikwei.jpeg",
     },
     {
       quote:
-        "Implementation was seamless and the results exceeded our expectations. The platform's flexibility is remarkable.",
+        "Develop an AI chatbot to assist users, provide insights on liquidity pools, process queries, and integrate with the platform for real-time support.",
       name: "Jun Heng",
       designation: "AI Engineer",
       src: "/junheng.jpeg",
     },
     {
       quote:
-        "This solution has significantly improved our team's productivity. The intuitive interface makes complex tasks simple.",
+        "Focuses on market research and pitch deck preparation, identifying target users, analyzing competitors, and crafting a compelling pitch to attract judges and investors.",
       name: "Cassie",
       designation: "Business Development",
       src: "/cassie.jpeg",    
     },
     {
       quote:
-        "Outstanding support and robust features. It's rare to find a product that delivers on all its promises.",
+        "Develop and deploy smart contracts, integrate with CDP AgentKit, and ensure seamless AI-driven liquidity pool management on the blockchain.",
       name: "Celine",
       designation: "Smart Contract Developer",
       src: "/celine.jpeg",
     },
     {
       quote:
-        "The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.",
+        "Design and develop an intuitive UI, display AI-driven insights, and ensure seamless interaction with smart contracts for liquidity management.",
       name: "Lee Xin Rou",
       designation: "Frontend Developer",
       src: "/xinrou.jpeg",    
     },
   ];
 
+  if (!isMounted) {
+    return null; 
+  }
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-        <div className="relative min-h-screen w-full flex">
-          <div className="absolute inset-0 w-full h-full bg-black opacity-50 z-[-2]" />
+          <div className="relative h-screen w-full flex overflow-hidden">
+            <div className="absolute inset-0 w-full h-full bg-black opacity-50 z-[-2]" />
             <AuroraBackground className="absolute inset-0 w-full h-full z-[-1]" children={undefined} />
-            <div className="items-start justify-center min-h-screen w-full mx-14 mt-14 relative z-10">
+            <div className="items-start justify-center h-full w-full m-14 relative z-10">
               <div className="flex space-x-14 justify-center items-center">
                 <div className="flex-col items-center space-y-7">
                   <div className="relative">
@@ -168,34 +172,33 @@ export default function Web3AIChat() {
                   </p>
                   <HoverBorderGradient
                     containerClassName="rounded-full"
-                    as="text"
+                    as="button"
                     className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
                   >
                     <Image
-                        src="/AIquidity.png"
-                        alt="AIquidity Logo" 
-                        width={20}
-                        height={20}
-                        className="object-contain" />
+                      src="/AIquidity.png"
+                      alt="AIquidity Logo"
+                      width={20}
+                      height={20}
+                      className="object-contain" />
                     <span>AI-Powered DeFi Automation</span>
                   </HoverBorderGradient>
                   <AnimatedTestimonials testimonials={testimonials} />
-                  
                 </div>
                 <Card className="w-full max-w-2xl shadow-xl h-[80vh] flex flex-col">
                   <CardHeader className="flex flex-row items-center justify-between shrink-0">
                     <div className="flex items-center gap-3">
                       <Image
                         src="/AIquidity.png"
-                        alt="AIquidity Logo" 
+                        alt="AIquidity Logo"
                         width={100}
                         height={100}
                         className="object-contain" />
                     </div>
-                    <WalletButton />
+                    <WalletButton/>
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col overflow-hidden">
-                    <ScrollArea className="flex-1 w-full pr-4 h-[calc(80vh-180px)]  overflow-y-auto">
+                    <ScrollArea className="flex-1 w-full pr-4 h-[calc(80vh-180px)] overflow-y-auto">
                       <div className="flex flex-col">
                         {messages.map((m) => (
                           <div
@@ -220,7 +223,21 @@ export default function Web3AIChat() {
                                     ? "bg-blue-500 text-white"
                                     : "bg-gray-200 text-gray-800"}`}
                               >
-                                {m.content}
+                                <ReactMarkdown
+                                  remarkPlugins={[remarkGfm]}
+                                  components={{
+                                    ol: ({ children }) => (
+                                      <ol style={{ listStyleType: "decimal", marginLeft: "20px" }}>
+                                        {children}
+                                      </ol>
+                                    ),
+                                    li: ({ children }) => (
+                                      <li style={{ marginBottom: "8px" }}>{children}</li>
+                                    )
+                                  }}
+                                >
+                                  {m.content}
+                                </ReactMarkdown>
                               </div>
                             </div>
                           </div>
@@ -228,7 +245,6 @@ export default function Web3AIChat() {
                         <div ref={messagesEndRef} />
                       </div>
                     </ScrollArea>
-                    
                     <div className="mt-4 px-2 space-x-2 flex overflow-x-auto whitespace-nowrap scrollbar-hide">
                       <QuickResponse onQuickSelect={handleQuickSelect} />
                     </div>
@@ -249,13 +265,11 @@ export default function Web3AIChat() {
                     </form>
                   </CardFooter>
                 </Card>
-
               </div>
             </div>
           </div>
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
-    
   );
 }

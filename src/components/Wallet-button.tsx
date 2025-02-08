@@ -1,6 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-export function WalletButton() {
+const WalletButton = () => {
   return (
     <ConnectButton.Custom>
       {({ account, openConnectModal }) => (
@@ -16,4 +16,6 @@ export function WalletButton() {
       )}
     </ConnectButton.Custom>
   );
-}
+};
+
+export default WalletButton; 
