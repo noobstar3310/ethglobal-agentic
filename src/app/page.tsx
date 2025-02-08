@@ -35,6 +35,16 @@ const queryClient = new QueryClient();
 
 export default function Web3AIChat() {
   const [messages, setMessages] = useState<Array<{ id: string; role: string; content: string }>>([]);
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -184,36 +194,39 @@ export default function Web3AIChat() {
                     </div>
                     <WalletButton />
                   </CardHeader>
-                  <CardContent className="flex-1 flex flex-col">
-                    <ScrollArea className="flex-1 w-full pr-4 h-[calc(80vh-180px)]">
-                      {messages.map((m) => (
-                        <div
-                          key={m.id}
-                          className={`flex mb-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}
-                        >
+                  <CardContent className="flex-1 flex flex-col overflow-hidden">
+                    <ScrollArea className="flex-1 w-full pr-4 h-[calc(80vh-180px)]  overflow-y-auto">
+                      <div className="flex flex-col">
+                        {messages.map((m) => (
                           <div
-                            className={`flex items-end ${m.role === "user" ? "flex-row-reverse" : "flex-row"}`}
+                            key={m.id}
+                            className={`flex mb-4 ${m.role === "user" ? "justify-end" : "justify-start"}`}
                           >
-                            <Avatar className={m.role === "user" ? "ml-2" : "mr-2"}>
-                              <AvatarFallback>
-                                {m.role === "user" ? "U" : "AI"}
-                              </AvatarFallback>
-                              {m.role === "assistant" && (
-                                <AvatarImage
-                                  src="/placeholder.svg?height=40&width=40"
-                                  alt="AI" />
-                              )}
-                            </Avatar>
                             <div
-                              className={`rounded-lg p-2 ${m.role === "user"
-                                  ? "bg-blue-500 text-white"
-                                  : "bg-gray-200 text-gray-800"}`}
+                              className={`flex items-end ${m.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                             >
-                              {m.content}
+                              <Avatar className={m.role === "user" ? "ml-2" : "mr-2"}>
+                                <AvatarFallback>
+                                  {m.role === "user" ? "Me" : "AI"}
+                                </AvatarFallback>
+                                {m.role === "assistant" && (
+                                  <AvatarImage
+                                    src="/placeholder.svg?height=40&width=40"
+                                    alt="AI" />
+                                )}
+                              </Avatar>
+                              <div
+                                className={`rounded-lg p-2 ${m.role === "user"
+                                    ? "bg-blue-500 text-white"
+                                    : "bg-gray-200 text-gray-800"}`}
+                              >
+                                {m.content}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                        <div ref={messagesEndRef} />
+                      </div>
                     </ScrollArea>
                     
                     <div className="mt-4 px-2 space-x-2 flex overflow-x-auto whitespace-nowrap scrollbar-hide">

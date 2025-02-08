@@ -26,7 +26,8 @@ export default function Chat() {
         throw new Error(data.error);
       }
 
-      setResponses(prev => [...prev, ...data.responses]);
+      setResponses(prev => [...prev, ...(Array.isArray(data.responses) ? data.responses : [data.responses])]);
+
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
@@ -38,11 +39,12 @@ export default function Chat() {
   return (
     <div className="max-w-2xl mx-auto p-4">
       <div className="mb-4 h-[400px] overflow-y-auto border rounded p-4">
-        {responses.map((response, index) => (
-          <div key={index} className="mb-2">
-            {response}
-          </div>
-        ))}
+      {responses.map((response, index) => (
+  <div key={index} className="mb-2 p-2 border-b last:border-b-0">
+    <span className="font-semibold">Bot:</span> {response}
+  </div>
+))}
+
       </div>
       
       <form onSubmit={handleSubmit} className="flex gap-2">

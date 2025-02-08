@@ -151,8 +151,10 @@ export async function POST(req: NextRequest) {
     for await (const chunk of stream) {
       if ("agent" in chunk) {
         responses.push(chunk.agent.messages[0].content);
+        NextResponse.json({ responses });
       } else if ("tools" in chunk) {
         responses.push(chunk.tools.messages[0].content);
+        NextResponse.json({ responses });
       }
     }
 
