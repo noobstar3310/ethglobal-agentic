@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -53,7 +52,6 @@ export default function Web3AIChat() {
     // scrollToBottom();
   }, [messages]);
 
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -93,7 +91,7 @@ export default function Web3AIChat() {
         };
         setMessages(prev => [...prev, errorMessage]);
       }
-    } catch (error) {
+    } catch {
       const errorMessage = {
         id: `error-${Date.now()}`,
         role: 'assistant',
@@ -158,10 +156,13 @@ export default function Web3AIChat() {
         <RainbowKitProvider>
           <div className="relative h-screen w-full flex overflow-hidden">
             <div className="absolute inset-0 w-full h-full bg-black opacity-50 z-[-2]" />
-            <AuroraBackground className="absolute inset-0 w-full h-full z-[-1]" children={undefined} />
+            <AuroraBackground className="absolute inset-0 w-full h-full z-[-1]">
+              {/* Add any children components here */}
+              <div></div> {/* Example child component */}
+            </AuroraBackground>
             <div className="items-start justify-center h-full w-full m-14 relative z-10">
               <div className="flex space-x-14 justify-center items-center">
-                <div className="flex-col items-center space-y-7">
+                <div className="flex-col items-center space-y-7"> 
                   <div className="relative">
                     <span className="font-bold text-7xl font-sans bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                       AIquidity

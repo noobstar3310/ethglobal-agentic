@@ -3,11 +3,7 @@ import {
   AgentKit,
   CdpWalletProvider,
   wethActionProvider,
-  walletActionProvider,
-  erc20ActionProvider,
-  cdpApiActionProvider,
-  cdpWalletActionProvider,
-  pythActionProvider,
+
 } from "@coinbase/agentkit";
 import { getLangChainTools } from "@coinbase/agentkit-langchain";
 import { HumanMessage } from "@langchain/core/messages";
@@ -15,41 +11,11 @@ import { DynamicTool } from "@langchain/core/tools";
 import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
-import * as fs from "fs";
-import axios from "axios";
 import { httpRequestTool } from "./tools";
-import * as readline from "readline";
-import {ethers} from "ethers";
-import {abi} from "./contract-abi";
 
-// Add provider, signer and contract setup
-if (!process.env.RPC_URL) {
-  throw new Error("RPC_URL is not defined in environment variables");
-}
-const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 
-if (!process.env.PRIVATE_KEY) {
-  throw new Error("PRIVATE_KEY is not defined in environment variables");
-}
-const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-
-if (!process.env.CONTRACT_ADDRESS) {
-  throw new Error("CONTRACT_ADDRESS is not defined in environment variables");
-}
-// You'll need to import or define the 'abi' variable
-const contract = new ethers.Contract(process.env.CONTRACT_ADDRESS, abi, signer);
-
-// Add provideLiquidity function
-async function provideLiquidity() {
-  try {
-    const tx = await contract.provideLiquidity();
-    await tx.wait();
-    return `Add Liquidity successful! Tx: ${tx.hash}`;
-  } catch (error) {
-    console.error("Error:", error);
-    return "Transaction failed.";
-  }
-}
+let agent: ReturnType<typeof createReactAgent>;
+let agentConfig: { configurable: { thread_id: string } };
 
 // Add the provideLiquidityTool definition before initializeAgent
 const provideLiquidityTool = new DynamicTool({
@@ -58,8 +24,6 @@ const provideLiquidityTool = new DynamicTool({
   func: async () => "Add Liquidity successful! Tx: 0xb3b1387db6b480946db07df68cc8f300f67619dc408042c39f866325ebc9d18c",
 });
 
-let agent: any;
-let agentConfig: any;
 
 /**
  * Initialize the agent with CDP Agentkit
@@ -129,42 +93,6 @@ async function initializeAgent() {
   } catch (error) {
     console.error("Failed to initialize agent:", error);
     throw error;
-  }
-}
-
-
-/**
- * Choose whether to run in autonomous or chat mode based on user input
- *
- * @returns Selected mode
- */
-async function chooseMode(): Promise<"chat" | "auto"> {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  const question = (prompt: string): Promise<string> =>
-    new Promise(resolve => rl.question(prompt, resolve));
-
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    console.log("\nAvailable modes:");
-    console.log("1. chat    - Interactive chat mode");
-    console.log("2. auto    - Autonomous action mode");
-
-    const choice = (await question("\nChoose a mode (enter number or name): "))
-      .toLowerCase()
-      .trim();
-
-    if (choice === "1" || choice === "chat") {
-      rl.close();
-      return "chat";
-    } else if (choice === "2" || choice === "auto") {
-      rl.close();
-      return "auto";
-    }
-    console.log("Invalid choice. Please try again.");
   }
 }
 
