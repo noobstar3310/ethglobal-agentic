@@ -49,4 +49,7 @@ AIquidity offers a smart, AI-driven liquidity pool advisor that seamlessly conne
 3. Supported chain: Base, Arbitrium
 4. Frontend: NEXT.JS, Shadcn UI
 
+## Contract Deployments
+1. Arbitrum Sepolia: https://sepolia.arbiscan.io/address/0xd45908ce50799bf73428dc0689a2083d9ff3b4c0#code
+
 
