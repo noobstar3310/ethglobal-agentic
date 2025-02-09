@@ -51,5 +51,5 @@ AIquidity offers a smart, AI-driven liquidity pool advisor that seamlessly conne
 
 ## Contract Deployments
 1. Arbitrum Sepolia: https://sepolia.arbiscan.io/address/0xd45908ce50799bf73428dc0689a2083d9ff3b4c0#code
-
+2. Base Sepolia: https://sepolia.basescan.org/address/0x4dbe1aec56fcee5cbb1b8c610a77feaa0c6594da#code
 
